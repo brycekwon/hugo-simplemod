@@ -1,0 +1,56 @@
+{{ define "main" }}
+
+    <article class="post-single">
+        <header class="post-header">
+            {{ partial "components/breadcrumbs.html" . }}
+            <h1 class="post-title entry-hint-parent">
+                {{- .Title -}}
+            </h1>
+            {{ with .Description }}
+                <div class="post-description">
+                    {{- . -}}
+                </div>
+            {{ end }}
+            <div class="post-meta">
+                {{ with .Params.links }}
+                    {{ $length := len . }}
+                    {{ range $i, $e := . }}
+                        <a href="{{- .url | safeURL -}}">{{- .name -}}</a>
+                        {{ if ne (add $i 1) $length }}
+                            &nbsp;·&nbsp;
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            </div>
+        </header>
+
+        {{ $headers := findRE "<h[1-6].*?>(.|\n])+?</h[1-6]>" .Content }}
+        {{ if ge (len $headers) 1 }}
+            <div class="toc side">
+                <details id="toc">
+                    <summary>
+                        <span class="details">Table of Contents</span>
+                    </summary>
+                    <div class="inner">
+                        {{- .TableOfContents -}}
+                    </div>
+                </details>
+            </div>
+        {{ end }}
+
+        <div class="post-content">
+            {{ partial "utils/heading-anchors.html" .Content }}
+        </div>
+
+        <footer class="post-footer">
+            <ul class="post-tags">
+                {{ range ($.GetTerms "tags") }}
+                    <li>
+                        <a href="{{- .Permalink -}}">{{- .LinkTitle | lower -}}</a>
+                    </li>
+                {{ end }}
+            </ul>
+        </footer>
+    </article>
+
+{{ end }}

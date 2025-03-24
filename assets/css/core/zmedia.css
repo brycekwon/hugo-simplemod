@@ -1,0 +1,17 @@
+@media screen and (max-width:768px) {
+    :root {
+        --gap: 14px;
+    }
+    .first-entry {
+        min-height: 260px;
+    }
+    .footer {
+        padding: calc((var(--footer-height) - var(--gap) - 10px)/2)var(--gap);
+    }
+}
+
+@media(prefers-reduced-motion) {
+    .terms-tags a:active, .button:active, .post-entry:active, #searchResults li:active {
+        transform: none;
+    }
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html lang="{{- site.Language -}}" dir="ltr">
+    <head>
+        {{ partial "metadata.html" . }}
+        {{ block "module_css" . }}{{ end }}
+        {{ block "module_js" . }}{{ end }}
+    </head>
+    <body class="dark {{ if (or (ne .Kind `page` ) (eq .Layout `search`)) -}}list{{- end -}}">
+        {{ if and .IsPage (ne .Layout "search") }}
+            <div id="progressBar"></div>
+        {{ end }}
+        <header class="header">
+            {{ partialCached "header.html" . }}
+        </header>
+        <main class="main">
+            {{ block "main" . }}{{ end }}
+        </main>
+        <footer class="footer">
+            {{ partialCached "footer.html" . }}
+        </footer>
+    </body>
+</html>

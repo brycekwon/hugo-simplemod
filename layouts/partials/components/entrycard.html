@@ -1,0 +1,33 @@
+<section class="post-entry tag-entry">
+    <div class="entry-header">
+        <h2 class="entry-hint-parent">
+            {{- .Title -}}
+        </h2>
+    </div>
+    <div class="entry-content">
+        <p>
+            {{- .Summary | plainify | htmlUnescape -}}
+        </p>
+    </div>
+    <div class="entry-footer">
+        {{ if eq .Page.Type "projects" }}
+            {{ range .Params.Tags | sort }}
+                {{ printf "#%s&nbsp;" .  | safeHTML }}
+            {{ end }}
+        {{ else }}
+                {{ $scratch := newScratch }}
+
+                {{ if not .Date.IsZero }}
+                    {{ $scratch.Add "meta" (slice (printf "<span title='%s'>%s</span>" (.Date) (.Date | time.Format "January 2, 2006") | safeHTML)) }}
+                {{ end }}
+        
+                {{ $scratch.Add "meta" (printf "%d min" .ReadingTime) }}
+                {{ $scratch.Add "meta" (printf "%d words" .WordCount) }}
+        
+                {{ with ($scratch.Get "meta") }}
+                    {{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
+                {{ end }}
+        {{ end }}
+    </div>
+    <a href="{{- .Permalink -}}" class="entry-link" aria-label="Post Link to {{ .Title | plainify -}}"></a>
+</section>

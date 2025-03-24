@@ -1,0 +1,96 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+{{ $title := "" }}
+{{ if .IsHome }}
+    {{ $title = printf "%s - %s" .Site.Params.author .Site.Params.headline }}
+{{ else if .IsPage }}
+    {{ if eq .Layout "search" }}
+        {{ $title = printf "%s | %s" .Title .Site.Title }}
+    {{ else }}
+        {{ $title = .Title }}
+    {{ end }}
+{{ else if .IsNode }}
+    {{ $title = printf "%s | %s" .Title .Site.Title }}
+{{ end }}
+
+{{ $description := default .Description .Summary }}
+
+{{ $keywords := "" }}
+{{ with .Keywords }}
+    {{ $keywords = delimit . ", " }}
+{{ end }}
+
+<!-- General Site Metadata -->
+<title>{{- $title -}}</title>
+<meta name="description" content="{{- $description -}}">
+<meta name="keywords" content="{{- $keywords -}}">
+<meta name="author" content="{{- site.Params.author -}}">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{- .Permalink -}}">
+<link rel="icon" type="image/png" href="/favicon.png">
+
+<!-- Open Graph / Meta / Facebook SEO -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{- $title -}}">
+<meta property="og:description" content="{{- $description -}}">
+<meta property="og:url" content="{{- .Permalink -}}">
+<meta property="og:image" content="/profile.webp">
+{{/*  <meta property="og:image" content="{{- with resources.Get `img/profile.webp` -}}{{- $image := . | fingerprint `sha256` -}}{{- $image.Permalink -}}{{- end -}}">  */}}
+
+<!-- Twitter / X SEO -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{- $title -}}">
+<meta name="twitter:description" content="{{- $description -}}">
+<meta name="twitter:url" content="{{- .Permalink -}}">
+<meta name="twitter:image" content="/profile.webp">
+{{/*  <meta name="twitter:image" content="{{- with resources.Get `img/profile.webp` -}}{{- $image := . | fingerprint `sha256` -}}{{- $image.Permalink -}}{{- end -}}">  */}}
+
+<!-- https://schema.org/docs/schemas.html -->
+<script type="application/ld+json">
+    {{ if eq .Section "posts" }}
+        {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "{{- .Permalink -}}"
+            },
+            "headline": "{{- .Title -}}",
+            "author": {
+                "@type": "Person",
+                "name": "{{- site.Params.author -}}"
+            },  
+            "datePublished": "{{- .Date.Format "2006-01-02" -}}",
+            {{ if ne .Lastmod .Date }}
+                "dateModified": "{{- .Lastmod.Format "2006-01-02" -}}"
+            {{ end }}
+        }
+    {{ else }}
+        {
+            "@context": "https://schema.org/",
+            "@type": "WebSite",
+            "name": "{{- site.Title -}}",
+            "url": "{{- .Permalink -}}",
+        }
+    {{ end }}
+</script>
+
+<!-- CSS Assets -->
+{{ $variables := resources.Get "css/core/theme-vars.css" }}
+{{ $resets := resources.Get "css/core/reset.css" }}
+{{ $common := resources.Match "css/common/*.css" | resources.Concat "css/common.css" }}
+{{ $media := resources.Get "css/core/zmedia.css" }}
+{{ $stylesheet := (slice $variables $resets $common $media) | resources.Concat "css/styles.css" | minify | fingerprint "sha256" }}
+<link crossorigin="anonymous" href="{{- $stylesheet.Permalink -}}" integrity="{{- $stylesheet.Data.Integrity -}}" rel="preload stylesheet" as="style">
+
+<!-- JS Assets -->
+{{ $script := resources.Get "js/theme.js" | js.Build (dict `format` `esm`) | minify | fingerprint "sha256" }}
+<script defer crossorigin="anonymous" src="{{- $script.Permalink -}}" integrity="{{- $script.Data.Integrity -}}"></script>
+
+<!-- No-JS Assets -->
+<noscript>
+    {{ $noscript := resources.Get "css/noscript.css" | minify | fingerprint "sha256" }}
+    <link crossorigin="anonymous" href="{{- $noscript.Permalink -}}" integrity="{{- $noscript.Data.Integrity -}}" rel="preload stylesheet" as="style">
+</noscript>

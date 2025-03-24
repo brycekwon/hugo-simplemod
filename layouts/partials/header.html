@@ -1,0 +1,54 @@
+<nav class="nav">
+    <div class="logo">
+        <!-- Site Title & Global Home Link -->
+        <a href="{{- site.BaseURL -}}" title="{{- site.Title -}}">
+            {{- site.Title -}}
+        </a>
+        <!-- Theme Toggle (Hidden on No-JS) -->
+        <div>
+            <button type="button" id="theme-toggle" aria-label="Theme Toggle">
+                <!-- Moon Icon (Displayed on Light Mode) -->
+                <svg xmlns="http://www.w3.org/2000/svg" height="18" width="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="moon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <!-- Sun Icon (Displayed on Dark Mode) -->
+                <svg xmlns="http://www.w3.org/2000/svg" height="18" width="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="sun">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <!-- Simple Hamburger Menu for Smaller Viewports -->
+    <input type="checkbox" id="hamburger-input" name="hamburger-input" aria-label="Navigation Menu">
+    <label id="hamburger-menu" for="hamburger-input"></label>
+    <div class="overlay"></div>
+    <!-- Itemized Navigation Bar -->
+    <ul id="menu">
+        {{ range site.Menus.main }}
+            <li>
+                <a href="{{- .URL | absURL -}}" title="{{- .Name -}}">
+                    <span>
+                        {{- .Pre }}{{ .Name }}{{ .Post -}}
+                    </span>
+                    <!-- Add Indication Icon for External Links -->
+                    {{ if findRE "://" .URL }}
+                        &nbsp;
+                        <svg xmlns="http://www.w3.org/2000/svg" height="12" width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14L21 3"></path>
+                        </svg>
+                    {{ end }}
+                </a>
+            </li>
+        {{ end }}
+    </ul>
+</nav>

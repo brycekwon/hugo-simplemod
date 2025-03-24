@@ -1,0 +1,19 @@
+{{ define "module_js" }}
+
+    {{ $search := resources.Get "js/search.js" | js.Build (dict `format` `esm`) | minify | fingerprint "sha256" }}
+    <script defer crossorigin="anonymous" src="{{- $search.Permalink -}}" integrity="{{- $search.Data.Integrity -}}"></script>
+
+{{ end }}
+
+{{ define "main" }}
+
+    {{ partial "components/page-header.html" . }}
+    <div id="searchbox">
+        <input type="search" autofocus autocomplete="off" maxlength="64" placeholder="{{- .Params.placeholder | default (printf `%s ↵` .Title) -}}" id="searchInput" aria-label="Search Input">
+        <ul id="searchResults" aria-label="Search Results"></ul>
+        <noscript>
+            <p>Enable JavaScript to use this search function.</p>
+        </noscript>
+    </div>
+
+{{ end }}

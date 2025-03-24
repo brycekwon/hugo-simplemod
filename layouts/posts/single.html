@@ -1,0 +1,70 @@
+{{ define "main" }}
+
+    <article class="post-single">
+        <header class="post-header">
+            {{ partial "components/breadcrumbs.html" . }}
+            <h1 class="post-title entry-hint-parent">
+                {{- .Title -}}
+            </h1>
+            {{ with .Description }}
+                <div class="post-description">
+                    {{- . -}}
+                </div>
+            {{ end }}
+            <div class="post-meta">
+                {{ $scratch := newScratch }}
+
+                {{ if not .Date.IsZero -}}
+                    {{ $scratch.Add "meta" (slice (printf "<span title='%s'>%s</span>" (.Date) (.Date | time.Format "January 2, 2006"))) }}
+                {{ end }}
+        
+                {{ $scratch.Add "meta" (printf "%d min read" .ReadingTime) }}
+                {{ $scratch.Add "meta" (printf "%d words" .WordCount) }}
+    
+                {{ range .Params.links }}
+                    {{ $scratch.Add "meta" (printf `<a href="%s">%s</a>` (.url | safeURL) (.name)) }}
+                {{ end }}
+        
+                {{ with ($scratch.Get "meta") }}
+                    {{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
+                {{ end }}
+            </div>
+            {{ if ne (.Date.Format "02.01.2006") (.Lastmod.Format "02.01.2006") }}
+                <div class="post-meta">
+                    <span title="{{- .Lastmod -}}">
+                        <i>Last updated on {{ .Lastmod | time.Format "January 2, 2006" -}}</i>
+                    </span>
+                </div>
+            {{ end }}
+        </header>
+
+        {{ $headers := findRE "<h[1-6].*?>(.|\n])+?</h[1-6]>" .Content }}
+        {{ if ge (len $headers) 1 }}
+            <div class="toc side">
+                <details id="toc">
+                    <summary>
+                        <span class="details">Table of Contents</span>
+                    </summary>
+                    <div class="inner">
+                        {{- .TableOfContents -}}
+                    </div>
+                </details>
+            </div>
+        {{ end }}
+
+        <div class="post-content">
+            {{ partial "utils/heading-anchors.html" .Content }}
+        </div>
+
+        <footer class="post-footer">
+            <ul class="post-tags">
+                {{ range ($.GetTerms "tags") }}
+                    <li>
+                        <a href="{{- .Permalink -}}">{{- .LinkTitle | lower -}}</a>
+                    </li>
+                {{ end }}
+            </ul>
+        </footer>
+    </article>
+
+{{ end }}

@@ -1,0 +1,30 @@
+{{ define "main" }}
+
+    <article class="first-entry home-info">
+        <header class="entry-header">
+            <h1>
+                {{- .Title | markdownify -}}
+            </h1>
+        </header>
+        <div class="entry-content">
+            {{- .Summary | markdownify -}}
+        </div>
+        <footer class="entry-footer">
+            <div class="social-icons">
+                {{ range site.Menus.socials }}
+                    <a href="{{- .URL | absURL -}}" title="{{- .Name -}}">
+                        {{ partial "utils/social-icons.html" .Name }}
+                    </a>
+                {{ end }}
+            </div>
+        </footer>
+    </article>
+
+    <!-- Recent Posts -->
+    {{ $pages := union .RegularPages .Sections }}
+    {{ $pages = where site.RegularPages "Type" "in" "posts" }}
+    {{ range first 3 $pages }}
+        {{ partial "components/entrycard.html" . }}
+    {{ end }}
+
+{{ end }}

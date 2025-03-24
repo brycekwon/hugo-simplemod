@@ -1,0 +1,28 @@
+{{ define "main" }}
+
+    {{ partial "components/page-header.html" . }}
+
+    {{ $pages := union .RegularPages .Sections }}
+    {{ $paginator := .Paginate $pages }}
+    {{ range $paginator.Pages }}
+        {{ partial "components/entrycard.html" . }}
+    {{ end }}
+
+    {{ if gt $paginator.TotalPages 1 }}
+        <div class="page-footer">
+            <nav class="pagination">
+                {{ if $paginator.HasPrev }}
+                    <a href="{{- $paginator.Prev.URL | absURL -}}" class="prev">
+                        «&nbsp;Prev&nbsp;{{- sub $paginator.PageNumber 1 -}}/{{- $paginator.TotalPages -}}
+                    </a>
+                {{ end }}
+                {{ if $paginator.HasNext }}
+                    <a href="{{- $paginator.Next.URL | absURL -}}" class="next">
+                        Next&nbsp;{{- add 1 $paginator.PageNumber -}}/{{- $paginator.TotalPages -}}
+                    </a>
+                {{ end }}
+            </nav>
+        </div>
+    {{ end }}
+
+{{ end }}

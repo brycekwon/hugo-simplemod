@@ -1,0 +1,10 @@
+<div class="page-header">
+    {{ partial "components/breadcrumbs.html" . }}
+    <h1>
+        {{- .Title -}}
+    </h1>
+    {{ $text := default .Description .Summary }}
+    <div class="post-description">
+        {{- $text | markdownify -}}
+    </div>
+</div>

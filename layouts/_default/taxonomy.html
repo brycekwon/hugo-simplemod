@@ -1,0 +1,22 @@
+{{ define "main" }}
+
+    {{ partial "components/page-header.html" . }}
+    <ul class="terms-tags">
+        {{ range .Data.Terms.Alphabetical }}
+            {{ $count := .Count }}
+            {{ with site.GetPage (printf "/tags/%s" .Name) }}
+                <li>
+                    <a href="{{- .Permalink -}}">
+                        {{- .Name -}}
+                        <sup>
+                            <strong>
+                                <sup>{{- $count -}}</sup>
+                            </strong>
+                        </sup>
+                    </a>
+                </li>
+            {{ end }}
+        {{ end }}
+    </ul>
+
+{{ end }}

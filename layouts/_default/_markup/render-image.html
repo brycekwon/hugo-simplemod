@@ -1,0 +1,9 @@
+{{ $image := .Page.Resources.GetMatch (.Destination | safeURL) }}
+
+<figure>
+    {{ $image = $image | fingerprint "sha256" }}
+    <img src="{{- $image.Permalink -}}" width="{{- $image.Width -}}" height="{{- $image.Height -}}" {{ with .PlainText }} alt="{{- . -}}" {{ end }}>
+    {{ with .Title }}
+        <figcaption>{{- . -}}</figcaption>
+    {{ end }}
+</figure>
